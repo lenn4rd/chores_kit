@@ -1,0 +1,13 @@
+AllCops:
+  Exclude:
+    - 'bin/*'
+    - 'Rakefile'
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
