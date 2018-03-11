@@ -1,5 +1,7 @@
 # ChoresKit
 
+[![Build Status](https://travis-ci.org/lenn4rd/chores_kit.svg?branch=master)](https://travis-ci.org/lenn4rd/chores_kit)
+
 ChoresKit is an opinionated micro-framework for running tasks.
 
 ## Installation
