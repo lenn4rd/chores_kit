@@ -2,10 +2,15 @@ PATH
   remote: .
   specs:
     chores_kit (0.1.0)
+      as-duration (~> 0.1.1)
+      dag (~> 0.0.9)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    as-duration (0.1.1)
+    byebug (10.0.0)
+    dag (0.0.9)
     diff-lcs (1.3)
     rake (10.5.0)
     rspec (3.7.0)
@@ -27,6 +32,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
+  byebug (~> 10.0.0)
   chores_kit!
   rake (~> 10.0)
   rspec (~> 3.0)
