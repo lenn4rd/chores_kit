@@ -1,4 +1,6 @@
 require 'date'
+require 'time'
+
 require 'as-duration'
 
 module ChoresKit
@@ -23,14 +25,28 @@ module ChoresKit
     end
 
     def schedule(options)
+      raise "Couldn't parse start time from attributes" if options[:at].nil?
+      raise "Couldn't parse interval from attributes" unless options[:every].nil? || options[:every].is_a?(AS::Duration)
+
+      at_ltz = Time.parse(options[:at]) || Time.now
+      at_utc = Time.utc(*at_ltz) || Date.today.to_time.utc
+
       @metadata[:schedule] = {
-        at:    options.fetch(:at, Date.today.to_time),
-        every: options.fetch(:every, 1.day)
+        at:    at_utc,
+        every: options[:every]
       }
     end
 
     def retry_failed(options)
-      @metadata[:retry_failed] = options
+      raise "Couldn't parse retry interval from attributes" unless options[:wait].nil? || options[:wait].is_a?(AS::Duration)
+
+      wait = options[:wait] || 1.second
+      retries = options[:retries] || 1
+
+      @metadata[:retry_failed] = {
+        wait: wait,
+        retries: retries
+      }
     end
 
     # Tasks and dependencies
