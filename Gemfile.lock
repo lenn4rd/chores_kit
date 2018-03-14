@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    chores_kit (0.2.0)
+    chores_kit (0.2.1)
       as-duration (~> 0.1.1)
       dag (~> 0.0.9)
 
