@@ -65,7 +65,12 @@ module ChoresKit
     end
 
     # After-run callbacks
-    def notify(conditions, &block)
+    def notify(*options, &block)
+      raise "Couldn't create notifications without a block" unless block_given?
+
+      conditions = *options
+      conditions = DEFAULT_NOTIFICATIONS if options.empty?
+
       conditions.each do |condition|
         notification = Notification.new(condition)
         notification.instance_eval(&block)

@@ -167,5 +167,55 @@ RSpec.describe ChoresKit::Chore do
   end
 
   describe '#notify' do
+    let(:notifications) { subject.instance_variable_get(:@notifications) }
+
+    context 'with one condition' do
+      it 'adds one notification' do
+        subject.notify(:successful) { 'Swallow what happens inside this block' }
+
+        expect(notifications.size).to eq(1)
+      end
+
+      context 'when :successful' do
+        it 'sets the notification condition' do
+          subject.notify(:successful) { 'Swallow what happens inside this block' }
+
+          expect(notifications).to have_key(:successful)
+          expect(notifications).to have_key(:successful)
+        end
+      end
+
+      context 'when :failed' do
+        it 'sets the notification condition' do
+          subject.notify(:failed) { 'Swallow what happens inside this block' }
+
+          expect(notifications).to have_key(:failed)
+        end
+      end
+    end
+
+    context 'with multiple conditions' do
+      it 'sets all notification conditions' do
+        subject.notify(:successful, :failed) { 'Swallow what happens inside this block' }
+
+        expect(notifications).to have_key(:successful)
+        expect(notifications).to have_key(:failed)
+      end
+    end
+
+    context 'without options' do
+      it 'falls back to default' do
+        subject.notify { 'Swallow what happens inside this block' }
+
+        expect(notifications).to have_key(:successful)
+        expect(notifications).to have_key(:failed)
+      end
+    end
+
+    context 'without a block' do
+      it 'throws an error' do
+        expect { subject.notify :rspec }.to raise_error(RuntimeError)
+      end
+    end
   end
 end
