@@ -144,6 +144,23 @@ RSpec.describe ChoresKit::Chore do
   end
 
   describe '#task' do
+    let(:tasks) { subject.instance_variable_get(:@tasks) }
+
+    it 'adds the task' do
+      expect { subject.task(:rspec) { 'Swallow what happens inside this block' } }.to change { tasks.size }.by(1)
+    end
+
+    context 'without options' do
+      it 'throws an error' do
+        expect { subject.task { 'Swallow what happens inside this block' } }.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'without a block' do
+      it 'throws an error' do
+        expect { subject.task :invalid }.to raise_error(RuntimeError)
+      end
+    end
   end
 
   describe '#run' do
