@@ -56,7 +56,7 @@ module ChoresKit
       raise "Couldn't create task without a name" if name.nil?
       raise "Couldn't create task without a block" unless block_given?
 
-      @dag.add_vertex(task: Task.new(name, params, &block))
+      @dag.add_vertex(name: name, task: Task.new(name, params, &block))
     end
 
     def run(task, options)

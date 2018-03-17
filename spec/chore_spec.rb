@@ -144,10 +144,23 @@ RSpec.describe ChoresKit::Chore do
   end
 
   describe '#task' do
+    let(:task) { tasks.first }
     let(:tasks) { subject.instance_variable_get(:@tasks) }
 
     it 'adds the task' do
       expect { subject.task(:rspec) { 'Swallow what happens inside this block' } }.to change { tasks.size }.by(1)
+    end
+
+    it 'assigns the name' do
+      subject.task(:rspec) { 'Swallow what happens inside this block' }
+
+      expect(task.name).to eq(:rspec)
+    end
+
+    it 'assigns the payload' do
+      subject.task(:rspec) { 'Swallow what happens inside this block' }
+
+      expect(task.send(:task)).to be_instance_of(ChoresKit::Task)
     end
 
     context 'without options' do
