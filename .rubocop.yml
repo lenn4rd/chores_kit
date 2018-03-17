@@ -1,6 +1,9 @@
 AllCops:
   Exclude:
     - 'bin/*'
+    - 'examples/*'
+    - 'spec/*'
+    - 'chores_kit.gemspec'
     - 'Rakefile'
 
 Style/Documentation:
