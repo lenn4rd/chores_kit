@@ -59,9 +59,28 @@ module ChoresKit
       @dag.add_vertex(name: name, task: Task.new(name, params, &block))
     end
 
-    def run(task, options)
+    def run(task, options = {})
       from = options[:triggered_by] || options[:upstream] || task
       to = options[:triggers] || options[:downstream] || task
+
+      tasks = @tasks.map(&:name)
+      direction = options[:upstream] || options[:triggered_by] ? 'upstream' : 'downstream'
+
+      # Throw an error if either up- or downstream task doesn't exist
+      non_existing_tasks = ([from, to] - tasks).uniq
+      raise "Couldn't set #{direction} dependency for non-existing task #{non_existing_tasks.first}" if non_existing_tasks.any?
+
+      # Throw an error if unsupported dependencies are set
+      raise "Multiple upstream tasks aren't supported" if from.is_a?(Array)
+      raise "Multiple downstream tasks aren't supported" if to.is_a?(Array)
+
+      # Skip any processing if there is just one task
+      return if tasks.one?
+
+      v1 = @dag.vertices.detect { |vertex| vertex[:name] == from }
+      v2 = @dag.vertices.detect { |vertex| vertex[:name] == to }
+
+      @dag.add_edge(from: v1, to: v2)
     end
 
     # After-run callbacks

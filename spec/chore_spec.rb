@@ -177,6 +177,89 @@ RSpec.describe ChoresKit::Chore do
   end
 
   describe '#run' do
+    let(:edges) { subject.instance_variable_get(:@dag).edges }
+
+    before do
+      subject.task(:first) { 'Swallow what happens inside this block' }
+    end
+
+    context 'with one task defined' do
+      context 'without options' do
+        it 'runs the task' do
+          subject.run(:first)
+
+          expect(edges).to be_empty
+        end
+
+        context 'when task does not exist' do
+          it 'throws an error' do
+            expect { subject.run(:non_existing) }.to raise_error(RuntimeError)
+          end
+        end
+      end
+
+      context 'with upstream task defined' do
+        it 'throws an error' do
+          expect { subject.run(:first, upstream: :non_existing) }.to raise_error(RuntimeError)
+        end
+      end
+
+      context 'with downstream task defined' do
+        it 'throws an error' do
+          expect { subject.run(:first, downstream: :non_existing) }.to raise_error(RuntimeError)
+        end
+      end
+    end
+
+    context 'with multiple tasks defined' do
+      before do
+        subject.task(:second) { 'Swallow what happens inside this block' }
+      end
+
+      context 'with upstream task defined' do
+        it 'sets the dependent task' do
+          subject.run(:second, upstream: :first)
+
+          expect(edges.size).to eq(1)
+          expect(edges.first.origin[:name]).to eq(:first)
+          expect(edges.first.destination[:name]).to eq(:second)
+        end
+
+        context 'when upstream task does not exist' do
+          it 'throws an error' do
+            expect { subject.run(:first, upstream: :non_existing) }.to raise_error(RuntimeError)
+          end
+        end
+
+        context 'when multiple upstream tasks are set' do
+          it 'throws an error' do
+            expect { subject.run(:first, upstream: [:second]) }.to raise_error(RuntimeError)
+          end
+        end
+      end
+
+      context 'with downstream task defined' do
+        it 'sets the dependent task' do
+          subject.run(:first, downstream: :second)
+
+          expect(edges.size).to eq(1)
+          expect(edges.first.origin[:name]).to eq(:first)
+          expect(edges.first.destination[:name]).to eq(:second)
+        end
+
+        context 'when downstream task does not exist' do
+          it 'throws an error' do
+            expect { subject.run(:first, downstream: :non_existing) }.to raise_error(RuntimeError)
+          end
+        end
+
+        context 'when multiple downstream tasks are set' do
+          it 'throws an error' do
+            expect { subject.run(:first, downstream: [:second]) }.to raise_error(RuntimeError)
+          end
+        end
+      end
+    end
   end
 
   describe '#notify' do
