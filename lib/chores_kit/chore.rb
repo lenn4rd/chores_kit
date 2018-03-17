@@ -24,6 +24,7 @@ module ChoresKit
       @metadata[:description] = string
     end
 
+    # rubocop:disable Metrics/AbcSize
     def schedule(options)
       raise "Couldn't parse start time from attributes" if options[:at].nil?
       raise "Couldn't parse interval from attributes" unless options[:every].nil? || options[:every].is_a?(AS::Duration)
@@ -36,6 +37,7 @@ module ChoresKit
         every: options[:every]
       }
     end
+    # rubocop:enable Metrics/AbcSize
 
     def retry_failed(options)
       raise "Couldn't parse retry interval from attributes" unless options[:wait].nil? || options[:wait].is_a?(AS::Duration)
@@ -59,6 +61,7 @@ module ChoresKit
       @dag.add_vertex(name: name, task: Task.new(name, params, &block))
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
     def run(task, options = {})
       from = options[:triggered_by] || options[:upstream] || task
       to = options[:triggers] || options[:downstream] || task
@@ -82,6 +85,7 @@ module ChoresKit
 
       @dag.add_edge(from: v1, to: v2)
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 
     # After-run callbacks
     def notify(*options, &block)

@@ -6,6 +6,7 @@ module ChoresKit
       @chore = Chore.new(name)
     end
 
+    # rubocop:disable Style/MethodMissing
     def method_missing(name, *args, &block)
       args = {} if args.empty?
 
@@ -15,5 +16,6 @@ module ChoresKit
         @chore.send(name, *args)
       end
     end
+    # rubocop:enable Style/MethodMissing
   end
 end
