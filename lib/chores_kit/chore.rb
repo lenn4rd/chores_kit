@@ -7,7 +7,7 @@ module ChoresKit
   class Chore
     attr_reader :name
 
-    DEFAULT_NOTIFICATIONS = [:failed, :successful].freeze
+    DEFAULT_NOTIFICATIONS = %i[successful failed].freeze
 
     def initialize(name)
       @name = name
