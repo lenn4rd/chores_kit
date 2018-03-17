@@ -24,7 +24,7 @@ RSpec.describe ChoresKit::DefinitionProxy do
   describe '#method_missing' do
     let(:metadata) { subject.chore.instance_variable_get(:@metadata) }
     let(:notifications) { subject.chore.instance_variable_get(:@notifications) }
-    let(:tasks) { subject.chore.tasks }
+    let(:tasks) { subject.chore.instance_variable_get(:@tasks) }
     let(:task) { tasks.first }
 
     context 'with options' do

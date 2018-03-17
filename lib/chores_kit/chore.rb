@@ -5,7 +5,7 @@ require 'as-duration'
 
 module ChoresKit
   class Chore
-    attr_reader :name, :tasks
+    attr_reader :name
 
     DEFAULT_NOTIFICATIONS = [:failed, :successful].freeze
 
