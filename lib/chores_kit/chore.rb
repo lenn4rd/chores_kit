@@ -77,9 +77,12 @@ module ChoresKit
       raise "Multiple upstream tasks aren't supported" if from.is_a?(Array)
       raise "Multiple downstream tasks aren't supported" if to.is_a?(Array)
 
-      # Skip further processing if the Chore has just one task defined or
-      # if only one of its tasks is set to run
-      return if tasks.one? || from == to
+      # Set explicit root task and skip further processing if the Chore has
+      # just one task defined or if only one of its tasks is set to run
+      if tasks.one? || from == to
+        @dag.root = @dag.find_by(name: from)
+        return
+      end
 
       v1 = @dag.vertices.detect { |vertex| vertex[:name] == from }
       v2 = @dag.vertices.detect { |vertex| vertex[:name] == to }

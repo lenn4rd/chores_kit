@@ -178,6 +178,7 @@ RSpec.describe ChoresKit::Chore do
 
   describe '#run' do
     let(:edges) { subject.instance_variable_get(:@dag).edges }
+    let(:root) { subject.instance_variable_get(:@dag).root }
 
     before do
       subject.task(:first) { 'Swallow what happens inside this block' }
@@ -189,6 +190,12 @@ RSpec.describe ChoresKit::Chore do
           subject.run(:first)
 
           expect(edges).to be_empty
+        end
+
+        it 'assumes root task implicitly' do
+          subject.run(:first)
+
+          expect(root.name).to eq(:first)
         end
 
         context 'when task does not exist' do
@@ -221,6 +228,14 @@ RSpec.describe ChoresKit::Chore do
           subject.run(:first)
 
           expect(edges).to be_empty
+        end
+
+        context 'when tasks are defined but not run' do
+          it 'assigns an explicit root task' do
+            subject.run(:second)
+
+            expect(root.name).to eq(:second)
+          end
         end
 
         context 'when task does not exist' do
