@@ -216,6 +216,20 @@ RSpec.describe ChoresKit::Chore do
         subject.task(:second) { 'Swallow what happens inside this block' }
       end
 
+      context 'without options' do
+        it 'runs the task' do
+          subject.run(:first)
+
+          expect(edges).to be_empty
+        end
+
+        context 'when task does not exist' do
+          it 'throws an error' do
+            expect { subject.run(:non_existing) }.to raise_error(RuntimeError)
+          end
+        end
+      end
+
       context 'with upstream task defined' do
         it 'sets the dependent task' do
           subject.run(:second, upstream: :first)
