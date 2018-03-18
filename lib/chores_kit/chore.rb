@@ -13,7 +13,7 @@ module ChoresKit
       @name = name
       @metadata = {}
 
-      @dag = DAG.new
+      @dag = DAG.new(mixin: EmbeddedTask)
       @tasks = @dag.vertices
 
       @notifications = {}
@@ -58,7 +58,10 @@ module ChoresKit
       raise "Couldn't create task without a name" if name.nil?
       raise "Couldn't create task without a block" unless block_given?
 
-      @dag.add_vertex(name: name, task: Task.new(name, params, &block))
+      task = Task.new(name, params)
+      task.instance_eval(&block)
+
+      @dag.add_vertex(name: name, task: task)
     end
 
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
@@ -88,6 +91,7 @@ module ChoresKit
       v2 = @dag.vertices.detect { |vertex| vertex[:name] == to }
 
       @dag.add_edge(from: v1, to: v2)
+      @dag.root = v1
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 

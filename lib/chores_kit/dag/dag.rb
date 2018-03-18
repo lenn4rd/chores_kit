@@ -3,11 +3,15 @@ require 'dag'
 module ChoresKit
   class DAG < ::DAG
     def root
-      @vertices.detect { |v| v.ancestors.empty? }
+      @root ||= @vertices.detect { |v| v.ancestors.empty? }
     end
 
-    def add_vertex(payload = {})
-      @vertices << Vertex.new(self, payload)
+    def find_by(name:)
+      @vertices.detect { |v| v.name == name }
+    end
+
+    def root=(vertex)
+      @root = vertex
     end
   end
 end

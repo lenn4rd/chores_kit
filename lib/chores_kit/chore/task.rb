@@ -2,10 +2,9 @@ module ChoresKit
   class Task
     attr_reader :name
 
-    def initialize(name, args, &block)
+    def initialize(name, *args)
       @name = name
       @args = args
-      @command = block
     end
 
     # rubocop:disable Style/MethodMissing

@@ -14,6 +14,12 @@ RSpec.describe ChoresKit::Chore do
     it 'sets the name' do
       expect(subject.name).to eq(:rspec)
     end
+
+    it 'uses the task mixin' do
+      mixin = subject.instance_variable_get(:@dag).instance_variable_get(:@mixin)
+
+      expect(mixin).to eq(ChoresKit::EmbeddedTask)
+    end
   end
 
   describe '#description' do
