@@ -83,7 +83,7 @@ module ChoresKit
       # Set explicit root task and skip further processing if the Chore has
       # just one task defined or if only one of its tasks is set to run
       if tasks.one? || from == to
-        @dag.root = @dag.find_by(name: from)
+        @dag.root!(@dag.find_by(name: from))
         return
       end
 
@@ -91,7 +91,6 @@ module ChoresKit
       v2 = @dag.vertices.detect { |vertex| vertex[:name] == to }
 
       @dag.add_edge(from: v1, to: v2)
-      @dag.root = v1
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 

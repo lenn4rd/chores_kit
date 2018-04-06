@@ -236,6 +236,15 @@ RSpec.describe ChoresKit::Chore do
           expect(edges).to be_empty
         end
 
+        it 'runs task in defined order' do
+          subject.task(:third) { 'Swallow what happens inside this block' }
+          subject.run(:first, triggers: :second)
+          subject.run(:second, triggers: :third)
+
+          expect(edges.size).to eq(2)
+          expect(root.name).to eq(:first)
+        end
+
         context 'when tasks are defined but not run' do
           it 'assigns an explicit root task' do
             subject.run(:second)
@@ -260,6 +269,15 @@ RSpec.describe ChoresKit::Chore do
           expect(edges.first.destination[:name]).to eq(:second)
         end
 
+        context 'when tasks are defined but not run' do
+          it 'assigns an explicit root task' do
+            subject.task(:third) { 'Swallow what happens inside this block' }
+            subject.run(:third, upstream: :second)
+
+            expect(root.name).to eq(:second)
+          end
+        end
+
         context 'when upstream task does not exist' do
           it 'throws an error' do
             expect { subject.run(:first, upstream: :non_existing) }.to raise_error(RuntimeError)
@@ -280,6 +298,15 @@ RSpec.describe ChoresKit::Chore do
           expect(edges.size).to eq(1)
           expect(edges.first.origin[:name]).to eq(:first)
           expect(edges.first.destination[:name]).to eq(:second)
+        end
+
+        context 'when tasks are defined but not run' do
+          it 'assigns an explicit root task' do
+            subject.task(:third) { 'Swallow what happens inside this block' }
+            subject.run(:second, downstream: :third)
+
+            expect(root.name).to eq(:second)
+          end
         end
 
         context 'when downstream task does not exist' do
