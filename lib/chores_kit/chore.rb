@@ -108,5 +108,9 @@ module ChoresKit
         @notifications[condition] = notification
       end
     end
+
+    def run!
+      @dag.root.run
+    end
   end
 end
