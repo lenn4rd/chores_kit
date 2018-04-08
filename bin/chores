@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'chores_kit'
+
+filename = ARGV[0]
+
+unless filename
+  puts 'Error: Expecting filename to run passed as parameter'
+  exit(1)
+end
+
+chore = Chores.load(filename)
+chore.run!
